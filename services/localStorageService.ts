@@ -1,7 +1,6 @@
-
 import { User, Product, Order } from '../types';
 
-const get = <T,>(key: string, defaultValue: T): T => {
+const get = <T>(key: string, defaultValue: T): T => {
   try {
     const value = localStorage.getItem(key);
     return value ? JSON.parse(value) : defaultValue;
@@ -11,7 +10,7 @@ const get = <T,>(key: string, defaultValue: T): T => {
   }
 };
 
-const set = <T,>(key: string, value: T): void => {
+const set = <T>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
@@ -19,11 +18,11 @@ const set = <T,>(key: string, value: T): void => {
   }
 };
 
-export const getUsers = () => get<User[]>('users', []);
-export const setUsers = (users: User[]) => set('users', users);
+export const getUsers = (): User[] => get<User[]>('users', []);
+export const setUsers = (users: User[]): void => set<User[]>('users', users);
 
-export const getProducts = () => get<Product[]>('products', []);
-export const setProducts = (products: Product[]) => set('products', products);
+export const getProducts = (): Product[] => get<Product[]>('products', []);
+export const setProducts = (products: Product[]): void => set<Product[]>('products', products);
 
-export const getOrders = () => get<Order[]>('orders', []);
-export const setOrders = (orders: Order[]) => set('orders', orders);
+export const getOrders = (): Order[] => get<Order[]>('orders', []);
+export const setOrders = (orders: Order[]): void => set<Order[]>('orders', orders);

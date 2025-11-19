@@ -1,5 +1,4 @@
-
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { CartItem, Product } from '../types';
 
 interface CartContextType {
@@ -14,7 +13,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const localData = localStorage.getItem('cart');
@@ -63,8 +62,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const itemCount = cart.reduce((count, item) => count + item.quantity, 0);
 
+  const value = { cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, itemCount };
+  
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, itemCount }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

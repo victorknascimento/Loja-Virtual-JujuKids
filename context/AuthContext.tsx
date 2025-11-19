@@ -1,24 +1,23 @@
-
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { User, UserRole } from '../types';
-import { getUsers, setUsers } from '../services/localStorageService';
+import * as localStorageService from '../services/localStorageService';
 
 interface AuthContextType {
   currentUser: User | null;
+  users: User[];
   login: (phone: string) => boolean;
   logout: () => void;
   register: (name: string, phone: string) => boolean;
-  users: User[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [users, setUsersState] = useState<User[]>([]);
 
   useEffect(() => {
-    const storedUsers = getUsers();
+    const storedUsers = localStorageService.getUsers();
     setUsersState(storedUsers);
     const sessionUser = sessionStorage.getItem('currentUser');
     if (sessionUser) {
@@ -26,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = (phone: string): boolean => {
+  const login = (phone: string) => {
     const user = users.find(u => u.phone === phone);
     if (user) {
       setCurrentUser(user);
@@ -41,9 +40,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.removeItem('currentUser');
   };
 
-  const register = (name: string, phone: string): boolean => {
+  const register = (name: string, phone: string) => {
     if (users.some(u => u.phone === phone)) {
-      return false; // User already exists
+      return false; 
     }
     const newUser: User = {
       id: Date.now().toString(),
@@ -52,13 +51,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       role: UserRole.CUSTOMER,
     };
     const updatedUsers = [...users, newUser];
-    setUsers(updatedUsers);
+    localStorageService.setUsers(updatedUsers);
     setUsersState(updatedUsers);
     return true;
   };
 
+  const value = { currentUser, login, logout, register, users };
+
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout, register, users }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

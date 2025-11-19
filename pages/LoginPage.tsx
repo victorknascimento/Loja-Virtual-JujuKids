@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const LoginPage = () => {
+export const LoginPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const { login } = useAuth();
@@ -37,10 +36,7 @@ const LoginPage = () => {
             required
           />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-pink-500 text-white font-bold py-2 px-4 rounded-xl hover:bg-pink-600 transition-colors"
-        >
+        <button type="submit" className="w-full bg-pink-500 text-white font-bold py-2 px-4 rounded-xl hover:bg-pink-600 transition-colors">
           Entrar
         </button>
       </form>
@@ -53,5 +49,3 @@ const LoginPage = () => {
     </div>
   );
 };
-
-export default LoginPage;

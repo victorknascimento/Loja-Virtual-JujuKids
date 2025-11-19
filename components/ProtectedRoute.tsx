@@ -4,12 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../types';
 
 interface ProtectedRouteProps {
-  // Fix: Changed type from JSX.Element to React.ReactNode to resolve namespace error.
-  children: React.ReactNode;
+  children: React.ReactElement;
   adminOnly?: boolean;
 }
 
-const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = false }) => {
   const { currentUser } = useAuth();
 
   if (!currentUser) {
@@ -22,5 +21,3 @@ const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) =>
 
   return children;
 };
-
-export default ProtectedRoute;

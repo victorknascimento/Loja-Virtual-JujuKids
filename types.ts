@@ -1,4 +1,3 @@
-
 export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   ADMIN = 'ADMIN',
@@ -27,6 +26,8 @@ export interface CartItem extends Product {
 export interface Order {
   id: string;
   userId: string;
+  customerName: string;
+  customerPhone: string;
   items: CartItem[];
   total: number;
   address: {
@@ -34,7 +35,5 @@ export interface Order {
     city: string;
     zip: string;
   };
-  customerName: string;
-  customerPhone: string;
   timestamp: string;
 }

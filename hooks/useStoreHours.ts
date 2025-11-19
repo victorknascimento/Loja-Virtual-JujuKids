@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { OPERATING_HOURS } from '../constants';
 
@@ -6,20 +5,20 @@ export const useStoreHours = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const checkStoreStatus = () => {
+    const checkStatus = () => {
       const now = new Date();
       const currentHour = now.getHours();
-
+      
       const { morning, afternoon } = OPERATING_HOURS;
 
-      const isMorningOpen = currentHour >= morning.start && currentHour < morning.end;
-      const isAfternoonOpen = currentHour >= afternoon.start && currentHour < afternoon.end;
+      const inMorning = currentHour >= morning.start && currentHour < morning.end;
+      const inAfternoon = currentHour >= afternoon.start && currentHour < afternoon.end;
 
-      setIsOpen(isMorningOpen || isAfternoonOpen);
+      setIsOpen(inMorning || inAfternoon);
     };
 
-    checkStoreStatus();
-    const interval = setInterval(checkStoreStatus, 60000); // Check every minute
+    checkStatus();
+    const interval = setInterval(checkStatus, 60000); // Check every minute
 
     return () => clearInterval(interval);
   }, []);

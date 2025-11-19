@@ -1,30 +1,22 @@
-
-import { useEffect } from 'react';
-import { getUsers, setUsers, getProducts, setProducts } from '../services/localStorageService';
-import { UserRole } from '../types';
+import React, { useEffect } from 'react';
+import * as localStorageService from '../services/localStorageService';
 import { INITIAL_PRODUCTS } from '../constants';
+import { UserRole } from '../types';
 
-// This component runs once to set up initial data if it doesn't exist.
-export const DataInitializer = () => {
+export const DataInitializer: React.FC = () => {
   useEffect(() => {
-    const users = getUsers();
+    const users = localStorageService.getUsers();
     if (users.length === 0) {
-      setUsers([
-        {
-          id: 'admin001',
-          name: 'Admin',
-          phone: '5585999195930',
-          role: UserRole.ADMIN,
-        }
+      localStorageService.setUsers([
+        { id: 'admin001', name: 'Admin', phone: '5585999195930', role: UserRole.ADMIN }
       ]);
-      console.log('Admin user created: 5585999195930 (no password needed)');
     }
 
-    const products = getProducts();
+    const products = localStorageService.getProducts();
     if (products.length === 0) {
-      setProducts(INITIAL_PRODUCTS);
+      localStorageService.setProducts(INITIAL_PRODUCTS);
     }
   }, []);
 
-  return null;
+  return null; 
 };

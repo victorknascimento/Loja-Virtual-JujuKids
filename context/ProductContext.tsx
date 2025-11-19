@@ -1,52 +1,54 @@
-
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Product } from '../types';
-import { getProducts, setProducts as saveProducts } from '../services/localStorageService';
+import * as localStorageService from '../services/localStorageService';
 import { INITIAL_PRODUCTS } from '../constants';
+
+type ProductData = Omit<Product, 'id'>;
 
 interface ProductContextType {
   products: Product[];
-  addProduct: (product: Omit<Product, 'id'>) => void;
-  updateProduct: (product: Product) => void;
+  addProduct: (productData: ProductData) => void;
+  updateProduct: (updatedProduct: Product) => void;
   deleteProduct: (productId: string) => void;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider = ({ children }: { children: ReactNode }) => {
+export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    let storedProducts = getProducts();
+    let storedProducts = localStorageService.getProducts();
     if (storedProducts.length === 0) {
       storedProducts = INITIAL_PRODUCTS;
-      saveProducts(storedProducts);
+      localStorageService.setProducts(storedProducts);
     }
     setProducts(storedProducts);
   }, []);
 
-  const addProduct = (productData: Omit<Product, 'id'>) => {
+  const addProduct = (productData: ProductData) => {
     const newProduct: Product = { ...productData, id: Date.now().toString() };
     const updatedProducts = [...products, newProduct];
     setProducts(updatedProducts);
-    saveProducts(updatedProducts);
+    localStorageService.setProducts(updatedProducts);
   };
 
   const updateProduct = (updatedProduct: Product) => {
     const updatedProducts = products.map(p => p.id === updatedProduct.id ? updatedProduct : p);
     setProducts(updatedProducts);
-    saveProducts(updatedProducts);
+    localStorageService.setProducts(updatedProducts);
   };
   
   const deleteProduct = (productId: string) => {
     const updatedProducts = products.filter(p => p.id !== productId);
     setProducts(updatedProducts);
-    saveProducts(updatedProducts);
+    localStorageService.setProducts(updatedProducts);
   };
-
+  
+  const value = { products, addProduct, updateProduct, deleteProduct };
 
   return (
-    <ProductContext.Provider value={{ products, addProduct, updateProduct, deleteProduct }}>
+    <ProductContext.Provider value={value}>
       {children}
     </ProductContext.Provider>
   );
