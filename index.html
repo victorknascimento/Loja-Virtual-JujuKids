@@ -10,24 +10,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@400;500;600;700&family=Raleway:wght@300;400;700&display=swap" rel="stylesheet">
     
-    <!-- Estilos Locais -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Estilos Locais (Uso de ./ para garantir caminho relativo) -->
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
     <!-- HEADER -->
     <header class="header">
         <div class="container header-content">
-            <a href="#" class="logo" onclick="app.router('home')">
+            <a href="#" class="logo" onclick="app.router('home'); return false;">
                 <h1>Juju Kids</h1>
             </a>
             
             <nav class="nav-links">
                 <!-- Link Admin (Invisível se não for admin) -->
-                <a href="#" id="nav-admin" class="hidden" onclick="app.router('admin')">Admin</a>
+                <a href="#" id="nav-admin" class="hidden" onclick="app.router('admin'); return false;">Admin</a>
 
                 <!-- Carrinho -->
-                <a href="#" class="cart-icon-container" onclick="app.router('cart')">
+                <a href="#" class="cart-icon-container" onclick="app.router('cart'); return false;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                     <span id="cart-count" class="cart-badge hidden">0</span>
                 </a>
@@ -47,6 +47,13 @@
     <!-- MAIN CONTENT -->
     <main class="container main-content">
         
+        <!-- Mensagem de Erro caso JS não carregue -->
+        <noscript>
+            <div style="padding: 20px; color: red; text-align: center;">
+                Este site precisa de JavaScript para funcionar. Por favor, ative-o no seu navegador.
+            </div>
+        </noscript>
+        
         <!-- VIEW: HOME -->
         <section id="view-home" class="view">
             <div class="hero-text">
@@ -60,6 +67,7 @@
 
             <div id="products-grid" class="products-grid">
                 <!-- Produtos inseridos via JS -->
+                <p style="text-align:center; width:100%;">Carregando produtos...</p>
             </div>
         </section>
 
@@ -76,7 +84,7 @@
                     <button type="submit" class="btn-primary full-width">Entrar</button>
                 </form>
                 <p class="auth-footer">
-                    Não tem uma conta? <a href="#" onclick="app.router('register')">Cadastre-se</a>
+                    Não tem uma conta? <a href="#" onclick="app.router('register'); return false;">Cadastre-se</a>
                 </p>
             </div>
         </section>
@@ -98,7 +106,7 @@
                     <button type="submit" class="btn-primary full-width">Cadastrar</button>
                 </form>
                 <p class="auth-footer">
-                    Já tem conta? <a href="#" onclick="app.router('login')">Faça login</a>
+                    Já tem conta? <a href="#" onclick="app.router('login'); return false;">Faça login</a>
                 </p>
             </div>
         </section>
@@ -255,6 +263,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Script (Uso de ./ para garantir caminho relativo) -->
+    <script src="./script.js"></script>
 </body>
 </html>
