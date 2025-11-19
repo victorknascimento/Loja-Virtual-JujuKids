@@ -8,7 +8,7 @@
     --gray-100: #f3f4f6;
     --gray-200: #e5e7eb;
     --danger: #ef4444;
-    --success: #10b981;
+    --success: #10b981; /* Green 500 */
     
     --font-sans: 'Poppins', sans-serif;
     --font-display: 'Montserrat', sans-serif;
@@ -70,7 +70,7 @@ body {
     display: flex;
     flex-direction: column;
     text-decoration: none;
-    line-height: 1.1;
+    line-height: 1;
 }
 
 .logo-title {
@@ -82,37 +82,90 @@ body {
 }
 
 .logo-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.7rem; /* Menor conforme solicitado */
     font-weight: 400;
     letter-spacing: 0.5px;
+    margin-top: 2px;
 }
 
 /* Lado Direito do Header */
 .header-right {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
-/* Status no Header */
+/* Status no Header (Estilo Novo) */
 .header-status {
-    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
 }
-/* Esconder o texto de status em telas muito pequenas para não quebrar o layout */
-@media (max-width: 600px) {
-    .header-status {
-        display: none; 
+
+/* Badge Container */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.15); /* Fundo translúcido */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
+}
+
+/* Ponto indicador (Bolinha) */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ccc;
+}
+
+/* Estilos específicos Aberto/Fechado */
+.status-badge.open .status-dot {
+    background-color: #4ade80; /* Verde brilhante */
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    animation: pulse-green 2s infinite;
+}
+
+.status-badge.closed .status-dot {
+    background-color: #f87171; /* Vermelho suave */
+}
+
+.status-badge.closed {
+    opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Animação de Pulso */
+@keyframes pulse-green {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    }
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(74, 222, 128, 0);
+    }
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
     }
 }
 
-.header-status div {
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-weight: 600;
+/* Responsividade do Status */
+@media (max-width: 480px) {
+    .status-text-label {
+        display: none; /* Esconde o texto "Loja Aberta" em telas minúsculas, deixa só a bolinha se quiser, ou remove tudo */
+    }
+    .header-status {
+        display: none; /* Por enquanto removendo em telas muito pequenas para priorizar o carrinho */
+    }
 }
-.status-open { background-color: white; color: var(--primary-hover); }
-.status-closed { background-color: #fee2e2; color: #991b1b; }
 
 /* Navegação */
 .nav-links {
@@ -132,21 +185,24 @@ body {
     position: relative;
     display: flex;
     align-items: center;
+    color: white;
 }
 
 .cart-badge {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: var(--danger);
-    color: white;
-    font-size: 0.75rem;
+    background-color: white;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 0.7rem;
     border-radius: 50%;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.1rem;
+    height: 1.1rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* Buttons */

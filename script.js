@@ -115,14 +115,23 @@ const app = {
         state.isStoreOpen = (hour >= morning.start && hour < morning.end) || 
                            (hour >= afternoon.start && hour < afternoon.end);
         
-        // Atualizar banner no Header (ID mudou de posição)
+        // Atualizar banner no Header
         const banner = document.getElementById('store-status');
         if (banner) {
             if (state.isStoreOpen) {
-                banner.innerHTML = `<div class="status-open">Loja Aberta</div>`;
+                // Badge moderna com bolinha pulsante
+                banner.innerHTML = `
+                    <div class="status-badge open">
+                        <span class="status-dot"></span>
+                        <span class="status-text-label">Loja Aberta</span>
+                    </div>`;
             } else {
-                // Mensagem curta para o header
-                banner.innerHTML = `<div class="status-closed">Fechado (${morning.start}h-${morning.end}h)</div>`;
+                // Badge discreta fechada
+                banner.innerHTML = `
+                    <div class="status-badge closed">
+                        <span class="status-dot"></span>
+                        <span class="status-text-label">Fechado (${morning.start}h)</span>
+                    </div>`;
             }
         }
         
@@ -210,9 +219,6 @@ const app = {
     // --- HOME & PRODUTOS ---
     renderHome: () => {
         const grid = document.getElementById('products-grid');
-        // Removemos o hero-text que estava duplicado
-        const heroText = document.querySelector('.hero-text');
-        if(heroText) heroText.remove(); // Limpeza se ainda existir no DOM velho
         
         grid.innerHTML = state.products.map(p => `
             <div class="product-card">
