@@ -81,27 +81,34 @@ button, input, select, textarea {
     text-decoration: none;
     line-height: 1;
     justify-content: center;
+    /* Ajuste para alinhar visualmente melhor */
+    padding-top: 4px; 
 }
 
-/* Estilo da Imagem da Logo com FILTRO MÁGICO */
+/* Estilo da Imagem da Logo */
 .logo-img {
-    height: 50px; /* Altura levemente aumentada para legibilidade */
+    height: 50px; /* Altura padrão */
     width: auto;
     object-fit: contain;
     display: block;
     
-    /* TRUQUE PARA TORNAR A LOGO BRANCA E SEM FUNDO */
-    /* Se a imagem tiver fundo branco e texto preto: 
-       - Invert transforma fundo em PRETO e texto em BRANCO.
-       - mix-blend-mode: screen faz o PRETO ficar transparente.
-       - Brightness/Grayscale garante que o texto fique Branco Puro.
+    /* 
+       FILTRO MÁGICO DE CORES:
+       1. Se for o SVG (que já é branco), o filtro:
+          Brightness(0) -> Vira preto
+          Invert(1) -> Vira branco de novo. (Funciona perfeitamente).
+          
+       2. Se for uma imagem COLORIDA que você subir:
+          Brightness(0) -> Vira preto
+          Invert(1) -> Vira branco.
+       
+       Ou seja, o filtro garante que QUALQUER coisa vire branca.
     */
     filter: brightness(0) invert(1); 
-    /* Nota: Se a sua imagem for PNG Transparente com texto PRETO, 
-       o filtro acima já a transforma em texto BRANCO corretamente. */
        
     opacity: 1;
     transition: transform 0.2s;
+    margin-left: -5px; /* Pequeno ajuste de margem para compensar o padding do SVG */
 }
 
 .logo-container:hover .logo-img {
@@ -115,7 +122,7 @@ button, input, select, textarea {
     text-transform: uppercase; 
     letter-spacing: 2px; 
     margin-top: 4px;
-    margin-left: 2px;
+    margin-left: 4px;
 }
 
 /* Lado Direito do Header */
