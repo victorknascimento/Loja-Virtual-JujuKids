@@ -1,7 +1,3 @@
-
-
-
-
 /**
  * JUJU KIDS - Vanilla JS Implementation
  * Lógica consolidada para rodar sem build tools
@@ -390,11 +386,15 @@ const app = {
 
     // --- ADMIN ---
     switchAdminTab: (tab) => {
+        // Esconde todas as seções
         document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
+        // Remove active de todos os botões
         document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
         
+        // Mostra a seção alvo
         document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
-        // Encontra o botão correspondente (simplificado)
+        
+        // Ativa o botão correto
         const buttons = document.querySelectorAll('.btn-tab');
         if(tab === 'products') buttons[0].classList.add('active');
         if(tab === 'orders') {
@@ -404,6 +404,9 @@ const app = {
         if(tab === 'users') {
             buttons[2].classList.add('active');
             app.renderAdminUsers();
+        }
+        if(tab === 'reports') {
+            buttons[3].classList.add('active');
         }
     },
 
@@ -541,6 +544,39 @@ const app = {
                 <td><span style="padding:2px 6px; border-radius:4px; background:${u.role === 'ADMIN' ? '#e9d5ff' : '#bbf7d0'}; font-size:0.8rem;">${u.role}</span></td>
             </tr>
         `).join('');
+    },
+
+    // --- EXCEL / CSV EXPORT ---
+    exportUsersToExcel: () => {
+        // Cabeçalho do CSV
+        const headers = ['Nome', 'Telefone', 'Perfil', 'ID'];
+        
+        // Dados
+        const rows = state.users.map(u => [
+            u.name,
+            u.phone,
+            u.role,
+            u.id
+        ]);
+
+        // Montar CSV com separador ponto-e-vírgula (melhor para Excel PT-BR)
+        // Adiciona BOM (\uFEFF) para forçar UTF-8 no Excel
+        let csvContent = '\uFEFF' + headers.join(';') + '\n';
+        
+        rows.forEach(row => {
+            csvContent += row.join(';') + '\n';
+        });
+
+        // Criar Blob e Link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `clientes_jujukids_${new Date().toISOString().slice(0,10)}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 };
 

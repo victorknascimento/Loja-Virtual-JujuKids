@@ -188,6 +188,7 @@
                 <button class="btn-tab active" onclick="app.switchAdminTab('products')">Produtos</button>
                 <button class="btn-tab" onclick="app.switchAdminTab('orders')">Pedidos</button>
                 <button class="btn-tab" onclick="app.switchAdminTab('users')">Usuários</button>
+                <button class="btn-tab" onclick="app.switchAdminTab('reports')">Relatórios</button>
             </div>
 
             <!-- Section: Products -->
@@ -228,6 +229,25 @@
                         </thead>
                         <tbody id="admin-users-list"></tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- Section: Reports -->
+            <div id="admin-tab-reports" class="admin-section hidden">
+                <div class="card">
+                    <h3>Exportar Dados</h3>
+                    <p style="margin-bottom: 1.5rem; color: #666;">Gere planilhas em Excel com os dados do sistema.</p>
+                    
+                    <div class="form-group">
+                        <label>Cadastros de Clientes</label>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <p style="font-size: 0.9rem; flex: 1;">Baixar lista completa de usuários cadastrados (Nome, Telefone, ID).</p>
+                            <button class="btn-primary" onclick="app.exportUsersToExcel()">
+                                <span class="material-icons" style="vertical-align: middle; font-size: 1.2rem; margin-right: 5px;">file_download</span>
+                                Baixar Excel
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
