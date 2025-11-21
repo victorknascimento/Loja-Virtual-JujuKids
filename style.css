@@ -215,6 +215,17 @@ button, input, select, textarea {
     font-weight: 500;
 }
 
+/* Nova classe para ícones na nav bar (como o Admin) */
+.nav-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.nav-icon-link:hover {
+    opacity: 0.9;
+}
+
 /* Cart Icon */
 .cart-icon-container {
     position: relative;
