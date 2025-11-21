@@ -1,6 +1,7 @@
 
 
 
+
 /**
  * JUJU KIDS - Vanilla JS Implementation
  * Lógica consolidada para rodar sem build tools
@@ -155,6 +156,20 @@ const app = {
         }
     },
 
+    // --- NOTIFICAÇÃO TOAST ---
+    showToast: (message) => {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+
+        toast.innerText = message;
+        toast.classList.add('show');
+
+        // Remove após 1 segundo (1000ms)
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 1000);
+    },
+
     // --- AUTH ---
     handleLogin: (e) => {
         e.preventDefault();
@@ -265,7 +280,9 @@ const app = {
         
         Storage.set('cart', state.cart);
         app.updateHeader();
-        alert('Produto adicionado!');
+        
+        // Substitui o alert pela notificação customizada
+        app.showToast('Produto adicionado ao carrinho!');
     },
 
     renderCart: () => {
