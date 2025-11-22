@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juju Kids - Moda Infantil</title>
+    <title>Wonder Kids - Moda Infantil</title>
     
     <!-- Google Fonts (Raleway) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +24,7 @@
             <!-- Logo Ajustada -->
             <a href="#" onclick="app.router('home'); return false;" class="logo-container">
                 <div style="display: flex; align-items: center;">
-                    <span style="font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 1.8rem; letter-spacing: -1px; color: white; line-height: 1;">JUJUKIDS</span>
+                    <span style="font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 1.8rem; letter-spacing: -1px; color: white; line-height: 1;">WONDER KIDS</span>
                     <!-- Ícone de "Doce/Bala" (simulado com icon) posicionado à direita e inclinado -->
                     <span class="material-icons" style="color: #fff; font-size: 1.8rem; margin-left: 8px; transform: rotate(20deg);">local_mall</span>
                 </div>
@@ -33,11 +33,7 @@
 
             <!-- Navegação e Status -->
             <div class="header-right">
-                <!-- Status da Loja -->
-                <div id="store-status" class="header-status">
-                    <!-- Injetado via JS -->
-                </div>
-
+                
                 <!-- Nav Links -->
                 <nav class="nav-links">
                     <!-- Área do Usuário -->
@@ -195,6 +191,7 @@
             <div id="admin-tab-products" class="admin-section">
                 <div style="text-align: right; margin-bottom: 1rem;">
                     <button class="btn-primary" onclick="app.openProductModal()">+ Novo Produto</button>
+                    <button class="btn-secondary" style="margin-left: 10px;" onclick="app.generateUpdateCode()">Gerar Código Atualizado</button>
                 </div>
                 <div class="table-responsive">
                     <table class="data-table">
@@ -283,7 +280,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Imagem do Produto</label>
+                    <label>Link da Imagem (URL)</label>
+                    <input type="url" id="prod-image-url" placeholder="https://exemplo.com/foto.jpg">
+                    <small style="color: #666;">Cole aqui o link da imagem para que todos os clientes possam ver.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>OU Carregar Arquivo (Apenas local)</label>
                     <input type="file" id="prod-image-file" accept="image/*">
                     <div class="image-preview-container">
                         <img id="prod-image-preview" class="image-preview" alt="Preview">
@@ -303,12 +306,26 @@
         </div>
     </div>
 
+    <!-- MODAL CÓDIGO GERADO -->
+    <div id="modal-code" class="modal hidden">
+        <div class="modal-content">
+            <h3>Código de Atualização</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                Copie o código abaixo e envie para o desenvolvedor atualizar o site para todos os clientes.
+            </p>
+            <textarea id="generated-code-area" rows="10" style="width: 100%; font-family: monospace; font-size: 0.8rem; padding: 10px;" readonly></textarea>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="document.getElementById('modal-code').classList.add('hidden')">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="footer">
         <div class="container text-center">
-            <h3>Juju Kids - Moda Infantil</h3>
-            <p>R. Maria Júlia, 676 - Bom jardim, Fortaleza</p>
-            <p class="copyright">© 2025 Juju Kids</p>
+            <h3>Wonder Kids - Moda Infantil</h3>
+            <p>Rua Imaginária, 000 - Cidade Modelo</p>
+            <p class="copyright">© 2025 Wonder Kids</p>
         </div>
     </footer>
 

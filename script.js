@@ -123,33 +123,9 @@ const app = {
         const hour = now.getHours();
         const { morning, afternoon } = CONSTANTS.OPERATING_HOURS;
         
+        // Atualiza apenas o estado interno
         state.isStoreOpen = (hour >= morning.start && hour < morning.end) || 
                            (hour >= afternoon.start && hour < afternoon.end);
-        
-        // Atualizar banner no Header
-        const banner = document.getElementById('store-status');
-        if (banner) {
-            if (state.isStoreOpen) {
-                // Badge moderna com bolinha pulsante
-                banner.innerHTML = `
-                    <div class="status-badge open">
-                        <span class="status-dot"></span>
-                        <span class="status-text-label">Loja Aberta</span>
-                    </div>`;
-            } else {
-                // Badge discreta fechada
-                banner.innerHTML = `
-                    <div class="status-badge closed">
-                        <span class="status-dot"></span>
-                        <span class="status-text-label">Fechado (${morning.start}h)</span>
-                    </div>`;
-            }
-        }
-        
-        // Re-renderizar home para atualizar botões (se necessário)
-        if (!document.getElementById('view-home').classList.contains('hidden')) {
-            app.renderHome();
-        }
     },
 
     // --- NOTIFICAÇÃO TOAST ---
@@ -245,6 +221,7 @@ const app = {
     renderHome: () => {
         const grid = document.getElementById('products-grid');
         
+        // Botão agora sempre ativo (sem lógica disabled)
         grid.innerHTML = state.products.map(p => `
             <div class="product-card">
                 <img src="${p.imageUrl}" alt="${p.name}" loading="lazy">
@@ -252,9 +229,7 @@ const app = {
                     <h3>${p.name}</h3>
                     <div class="card-footer">
                         <span class="price">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
-                        <button class="btn-primary" 
-                            onclick="app.addToCart('${p.id}')" 
-                            ${!state.isStoreOpen ? 'disabled style="background:#ccc; cursor:not-allowed"' : ''}>
+                        <button class="btn-primary" onclick="app.addToCart('${p.id}')">
                             Adicionar
                         </button>
                     </div>
@@ -265,6 +240,13 @@ const app = {
 
     // --- CARRINHO ---
     addToCart: (id) => {
+        // Verificação de Loja Fechada
+        if (!state.isStoreOpen) {
+            const { morning, afternoon } = CONSTANTS.OPERATING_HOURS;
+            alert(`A LOJA ESTÁ FECHADA AGORA!\n\nNossos horários de atendimento são:\nManhã: ${morning.start}h às ${morning.end}h\nTarde: ${afternoon.start}h às ${afternoon.end}h\n\nAguardamos você no próximo horário!`);
+            return;
+        }
+
         const product = state.products.find(p => p.id === id);
         const existing = state.cart.find(item => item.id === id);
         
@@ -277,7 +259,7 @@ const app = {
         Storage.set('cart', state.cart);
         app.updateHeader();
         
-        // Substitui o alert pela notificação customizada
+        // Notificação de sucesso
         app.showToast('Produto adicionado ao carrinho!');
     },
 
@@ -430,9 +412,11 @@ const app = {
         modal.classList.remove('hidden');
         const preview = document.getElementById('prod-image-preview');
         const fileInput = document.getElementById('prod-image-file');
+        const urlInput = document.getElementById('prod-image-url');
         
-        // Resetar file input
+        // Resetar inputs
         fileInput.value = '';
+        urlInput.value = '';
 
         if (product) {
             document.getElementById('prod-id').value = product.id;
@@ -441,8 +425,11 @@ const app = {
             document.getElementById('prod-price').value = product.price;
             document.getElementById('prod-desc').value = product.description;
             
-            // Gerenciar Imagem (URL existente)
+            // Preencher URL se existir
             document.getElementById('prod-image-current').value = product.imageUrl;
+            if (product.imageUrl.startsWith('http')) {
+                urlInput.value = product.imageUrl;
+            }
             preview.src = product.imageUrl;
             preview.classList.add('visible');
         } else {
@@ -461,19 +448,26 @@ const app = {
         e.preventDefault();
         const id = document.getElementById('prod-id').value;
         const fileInput = document.getElementById('prod-image-file');
+        const urlInput = document.getElementById('prod-image-url');
         let finalImageUrl = document.getElementById('prod-image-current').value;
 
-        // Se usuário selecionou um novo arquivo
-        if (fileInput.files && fileInput.files[0]) {
+        // Lógica de prioridade de imagem:
+        // 1. URL digitada (melhor para compartilhamento)
+        // 2. Arquivo enviado (base64, só local)
+        // 3. Imagem que já existia
+        // 4. Fallback
+
+        if (urlInput.value && urlInput.value.trim() !== '') {
+             finalImageUrl = urlInput.value.trim();
+        } else if (fileInput.files && fileInput.files[0]) {
             try {
                 finalImageUrl = await Utils.fileToBase64(fileInput.files[0]);
             } catch (err) {
-                alert('Erro ao processar imagem');
+                alert('Erro ao processar arquivo');
                 return;
             }
         } else if (!finalImageUrl) {
-            // Se não tem arquivo novo nem imagem antiga
-            finalImageUrl = 'https://via.placeholder.com/400'; // Fallback
+            finalImageUrl = 'https://via.placeholder.com/400';
         }
 
         const prodData = {
@@ -508,6 +502,27 @@ const app = {
             Storage.set('products', state.products);
             app.renderAdminProducts();
         }
+    },
+
+    // --- GERAÇÃO DE CÓDIGO PARA ATUALIZAÇÃO ---
+    generateUpdateCode: () => {
+        const currentProducts = Storage.get('products', CONSTANTS.INITIAL_PRODUCTS);
+        
+        // Formata o JSON de produtos como uma string de código JS válida
+        const productsString = JSON.stringify(currentProducts, null, 4);
+        
+        const codeBlock = `
+// 1. Copie este bloco inteiro.
+// 2. No arquivo script.js, procure por "INITIAL_PRODUCTS".
+// 3. Substitua todo o bloco INITIAL_PRODUCTS pelo código abaixo:
+
+INITIAL_PRODUCTS: ${productsString}
+        `;
+
+        const txtArea = document.getElementById('generated-code-area');
+        txtArea.value = codeBlock.trim();
+        
+        document.getElementById('modal-code').classList.remove('hidden');
     },
 
     renderAdminOrders: () => {
